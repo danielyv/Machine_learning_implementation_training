@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
     var testY=test.select("Profit")
 
     var testX=test.remove("Profit")
-    var x: MLR = MLR(trainX,trainY)
+    var x: MLR = MLR(trainX,trainY,0.05)
     x.train()
     val result:DoubleArray = x.predictArray(x.dataFrameToArray(testX))
     print(x)

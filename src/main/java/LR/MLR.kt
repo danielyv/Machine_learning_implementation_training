@@ -3,9 +3,10 @@ import krangl.*
 import org.ejml.All
 import org.ejml.simple.SimpleMatrix
 
-class MLR(X:DataFrame,Y:DataFrame){
+class MLR(X:DataFrame,Y:DataFrame,SL:Double){
     private val x:DataFrame = X
     private val y:DataFrame = Y
+    private val significanceValue:Double=SL
     private var iv:DoubleArray= DoubleArray(x.names.size+1)
     fun train(){
 
@@ -52,5 +53,23 @@ class MLR(X:DataFrame,Y:DataFrame){
         var str=""
         iv.forEach { e->str+=e.toString()+";" }
         return str.substring(0,str.length-1)
+    }
+
+
+    private fun backwardElimination(){
+
+    }
+    private fun forwordSelection(){
+
+    }
+    private fun bidirectionalElimination(){
+        var names:Array<String> = x.names.toTypedArray()
+        var actual:Array<String> = arrayOf()
+        while (!names.equals(actual)){
+            names=actual
+            forwordSelection()
+            backwardElimination()
+            actual=x.names.toTypedArray()
+        }
     }
 }
