@@ -49,7 +49,7 @@ class MLR(X:DataFrame,Y:DataFrame){
     }
 
     override fun toString():String{
-        var str:String=""
+        var str=""
         iv.forEach { e->str+=e.toString()+";" }
         return str.substring(0,str.length-1)
     }
