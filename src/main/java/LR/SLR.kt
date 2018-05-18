@@ -1,13 +1,17 @@
 package LR
 
 import krangl.DataCol
+import krangl.DataFrame
+import krangl.mean
 
 typealias PDA = Pair<DoubleArray, DoubleArray>
 
-class SLR(pts: Array<DoubleArray>) {
+class SLR(pts: DataFrame,x:String,y:String) {
     var a: Double = 0.0
     var b: Double = 0.0
-    private val points: Array<DoubleArray> = pts
+    private var X:String=x
+    private var Y:String=y
+    private val points: DataFrame = pts
 
     companion object {
         fun transformCouple(x:DataCol,y:DataCol):Array<DoubleArray>{
@@ -22,42 +26,34 @@ class SLR(pts: Array<DoubleArray>) {
     }
 
     fun train() {
-        for (i: PDA in pairList()) {
-            a += (i.second[1] - i.first[1]) / (i.second[0] - i.first[0])
+
+        var mean:DoubleArray= doubleArrayOf(points[X].mean() as Double,points[Y].mean() as Double)
+        val xa=points[X].values()
+        val ya=points[Y].values()
+        var sx=0.0
+        var sxy=0.0
+        for(i in 0..points[X].length-1){
+            var x=xa[i].toString().toDouble()-mean[0]
+            var y=ya[i].toString().toDouble()-mean[1]
+            sx+=x*x
+            sxy+=x*y
         }
-        a /= this.points.size - 1
-        for (i: DoubleArray in this.points) {
-            b += i[1] - i[0] * a
-        }
-        b /= this.points.size
+        sx/=points[X].length-2
+        sxy/=points[X].length-2
+        a=sxy/sx
+        b=mean[1]-a*mean[0]
+
     }
 
     fun predict(x: Double): Double {
         return a * x + b
     }
-    fun predictArray(x:Array<DoubleArray>):DoubleArray{
+    fun predictArray(x:Array<*>):DoubleArray{
         var copy:MutableList<Double> = mutableListOf()
-        for(i in 0..x.size-1){
-            copy.add(this.predict(x[i][0]))
+        for(i in x){
+            copy.add(this.predict(i.toString().toDouble()))
         }
         return copy.toDoubleArray()
     }
-    private fun swap(p: PDA): PDA {
-        return Pair(p.second, p.first)
-    }
 
-    private fun choose(p: PDA): PDA {
-        if (p.first[0] > p.second[0]) {
-            return swap(p)
-        }
-        return p
-    }
-
-    private fun pairList(): List<PDA> {
-        var list = mutableListOf<PDA>()
-        for (i: Int in 0..this.points.size - 2) {
-            list.add(choose(Pair(this.points[i], this.points[i + 1])))
-        }
-        return list
-    }
 }

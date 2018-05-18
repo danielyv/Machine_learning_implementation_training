@@ -4,7 +4,7 @@ import kotlin.math.sqrt
 class DataPreProcessing {
     companion object {
         fun split_dataset(data: DataFrame,prctTest: Double): Pair<DataFrame, DataFrame> {
-            var df:DataFrame=data.shuffle()
+            var df:DataFrame=data.select(data.names)
             var fdf=df.head((df.cols[0].length*prctTest).toInt())
             val sdf=df.tail(df.cols[0].length-fdf.cols[0].length)
             return Pair(fdf,sdf)
