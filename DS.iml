@@ -38,6 +38,14 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-reflect:1.2.30" level="project" />
     <orderEntry type="library" name="Maven: org.knowm.xchart:xchart:3.5.3-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: de.erichseifert.vectorgraphics2d:VectorGraphics2D:0.13" level="project" />
+    <orderEntry type="library" name="Maven: org.ejml:ejml-all:0.34" level="project" />
+    <orderEntry type="library" name="Maven: org.ejml:ejml-core:0.34" level="project" />
+    <orderEntry type="library" name="Maven: org.ejml:ejml-fdense:0.34" level="project" />
+    <orderEntry type="library" name="Maven: org.ejml:ejml-ddense:0.34" level="project" />
+    <orderEntry type="library" name="Maven: org.ejml:ejml-cdense:0.34" level="project" />
+    <orderEntry type="library" name="Maven: org.ejml:ejml-zdense:0.34" level="project" />
+    <orderEntry type="library" name="Maven: org.ejml:ejml-dsparse:0.34" level="project" />
+    <orderEntry type="library" name="Maven: org.ejml:ejml-simple:0.34" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.41" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.41" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-test:1.2.41" level="project" />

@@ -13,17 +13,6 @@ class SLR(pts: DataFrame,x:String,y:String) {
     private var Y:String=y
     private val points: DataFrame = pts
 
-    companion object {
-        fun transformCouple(x:DataCol,y:DataCol):Array<DoubleArray>{
-            val arr:MutableList<DoubleArray> = mutableListOf()
-            val yCol=y.values()
-            val xCol=x.values()
-            for(i in 0..x.length-1){
-                arr.add(doubleArrayOf(xCol[i] as Double,yCol[i] as Double))
-            }
-            return arr.toTypedArray()
-        }
-    }
 
     fun train() {
 

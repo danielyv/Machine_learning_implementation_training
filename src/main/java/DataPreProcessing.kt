@@ -53,13 +53,13 @@ class DataPreProcessing {
             }
             return df
         }
-        fun dummy_variables(o:DataFrame,name:String):DataFrame{
+        fun dummyVariables(o:DataFrame,name:String):DataFrame{
             fun Boolean.toDouble() = if (this) 1.0 else 0.0
             var df = o.select(o.names)
             df=df.remove(name)
             val col:DataCol=o[name]
-            for(i in 0..(col.max() as Double).toInt()){
-                var l: MutableList<Double> = mutableListOf()
+            for(i in 0..((col.max() as Double).toInt())-1){
+                val l: MutableList<Double> = mutableListOf()
                 col.values().forEach { e->l.add((e.toString().toDouble().toInt()==i).toDouble())}
                 df=df.addColumn(name+i){
                     l

@@ -1,4 +1,5 @@
 import DataPreProcessing
+import LR.MLR
 import LR.SLR
 import krangl.*
 import org.knowm.xchart.SwingWrapper
@@ -11,15 +12,34 @@ import org.knowm.xchart.XYChartBuilder
 
 
 
-
 fun main(args: Array<String>) {
-    var df= DataFrame.readCSV("./Salary_Data.csv")
-    var (train,test)= DataPreProcessing.split_dataset(df,(2.0/3.0))
+    var df= DataFrame.readCSV("./50_Startups.csv")
+    df=DataPreProcessing.standardisation(DataPreProcessing.dummyVariables(DataPreProcessing.categorisation(df,"State"),"State"))
+    var (train,test)= DataPreProcessing.split_dataset(df,(1.0/2.0))
+
+    /*
+    //SIMPLE LINEAR REGRESSION TEST
     var x: SLR = SLR(df,"YearsExperience","Salary")
     x.train()
     var v:Array<DoubleArray> = arrayOf(columntoDoubleArray(test["YearsExperience"]),columntoDoubleArray(test["Salary"]))
     var b:Array<DoubleArray> = arrayOf(columntoDoubleArray(test["YearsExperience"]),x.predictArray(test["YearsExperience"].values()))
     chart(v,b)
+    */
+    //MULTIPLE LINEAR REGRESSION TEST
+    var trainY=train.select("Profit")
+
+    var trainX=train.remove("Profit")
+    var testY=test.select("Profit")
+
+    var testX=test.remove("Profit")
+    var x: MLR = MLR(trainX,trainY)
+    x.train()
+    val result:DoubleArray = x.predictArray(x.dataFrameToArray(testX))
+    print(x)
+    var b:Array<DoubleArray> = arrayOf(DoubleArray(result.size,{i->i.toDouble()}),columntoDoubleArray(testY["Profit"]))
+    var v:Array<DoubleArray> = arrayOf(DoubleArray(result.size,{i->i.toDouble()}),result)
+
+    chart(b,v)
 }
 
 
