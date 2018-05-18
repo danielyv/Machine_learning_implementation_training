@@ -9,8 +9,8 @@ typealias PDA = Pair<DoubleArray, DoubleArray>
 class SLR(pts: DataFrame,x:String,y:String) {
     var a: Double = 0.0
     var b: Double = 0.0
-    private var X:String=x
-    private var Y:String=y
+    final var X:String=x
+    final var Y:String=y
     private val points: DataFrame = pts
 
 

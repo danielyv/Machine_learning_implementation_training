@@ -8,6 +8,8 @@ class MLR(X:DataFrame,Y:DataFrame,SL:Double){
     private val y:DataFrame = Y
     private val significanceValue:Double=SL
     private var iv:DoubleArray= DoubleArray(x.names.size+1)
+    private var slr:Array<SLR> = slrConstruct()
+
     fun train(){
 
         var X:SimpleMatrix=dataFrameToMatrix(x.addColumn("b"){
@@ -57,7 +59,11 @@ class MLR(X:DataFrame,Y:DataFrame,SL:Double){
 
 
     private fun backwardElimination(){
-
+        var p:Double=0.0
+        var selected:SLR=slr[0]
+        while (p<significanceValue){
+            x.remove(selected.X)
+        }
     }
     private fun forwordSelection(){
 
@@ -71,5 +77,14 @@ class MLR(X:DataFrame,Y:DataFrame,SL:Double){
             backwardElimination()
             actual=x.names.toTypedArray()
         }
+    }
+    private fun slrConstruct():Array<SLR>{
+        var arr:MutableList<SLR> = mutableListOf()
+        val name:String=y.names[0]
+        for(i in x.names){
+            arr.add(SLR(x.select(i).addColumn(name){y[name]},i,name))
+            arr[arr.size-1].train()
+        }
+        return arr.toTypedArray()
     }
 }
