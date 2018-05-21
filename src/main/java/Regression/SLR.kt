@@ -1,6 +1,5 @@
-package LR
+package Regression
 
-import krangl.DataCol
 import krangl.DataFrame
 import krangl.mean
 
@@ -9,8 +8,8 @@ typealias PDA = Pair<DoubleArray, DoubleArray>
 class SLR(pts: DataFrame,x:String,y:String) {
     var a: Double = 0.0
     var b: Double = 0.0
-    final var X:String=x
-    final var Y:String=y
+    val X:String=x
+    val Y:String=y
     private val points: DataFrame = pts
 
 
@@ -33,7 +32,6 @@ class SLR(pts: DataFrame,x:String,y:String) {
         b=mean[1]-a*mean[0]
 
     }
-
     fun predict(x: Double): Double {
         return a * x + b
     }
