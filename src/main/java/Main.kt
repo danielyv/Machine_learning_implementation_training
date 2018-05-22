@@ -1,6 +1,7 @@
 import Regression.MLR
 import Regression.PR
 import krangl.*
+import org.knowm.xchart.BitmapEncoder
 import org.knowm.xchart.SwingWrapper
 import org.knowm.xchart.style.markers.SeriesMarkers
 import org.knowm.xchart.style.Styler.LegendPosition
@@ -44,7 +45,7 @@ fun main(args: Array<String>) {
     x.train()
     */
     //POLYNOMIAL REGRESSION
-    var x=PR(df,"YearsExperience","Salary",20)
+    var x=PR(df,"YearsExperience","Salary",6)
     x.train()
     var doubleArray:DoubleArray= DoubleArray((df["YearsExperience"].max()as Double*1000.0).toInt()*2,{ i->((i-(df["YearsExperience"].max()as Double*1000.0))/1000).toDouble()})
     val result: DoubleArray = x.predictArray(doubleArray.toTypedArray())
@@ -70,4 +71,5 @@ fun chart(a: Array<DoubleArray>, b: Array<DoubleArray>) {
     series.setMarker(SeriesMarkers.DIAMOND)
 
     SwingWrapper(chart).displayChart()
+    BitmapEncoder.saveBitmap(chart, "./Sample_Chart", BitmapEncoder.BitmapFormat.PNG);
 }
