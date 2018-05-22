@@ -171,5 +171,33 @@ class DataPreProcessing {
         fun dataFrameToMatrix(o:DataFrame): SimpleMatrix {
             return SimpleMatrix(dataFrameToArray(o))
         }
+        fun datasetToArrayDoubleArray(o:DataFrame):Array<DoubleArray>{
+            var arr:MutableList<DoubleArray> = mutableListOf()
+            for(i in o.rows){
+                var line:MutableList<Double> = mutableListOf()
+                for(e in i.values){
+                    line.add(e.toString().toDouble())
+                }
+                arr.add(line.toDoubleArray())
+            }
+            return arr.toTypedArray()
+        }
+        fun buildTestSampleMultipleRegression(o:DataFrame,size:Double):Array<DoubleArray>{
+            var arr:Array<DoubleArray> = Array(size.toInt()){ DoubleArray(o.names.size) }
+            for(i in o.cols){
+                var line:DoubleArray = DoubleArray(size.toInt()){c->((c*(i.max()as Double)/(size/2)))-i.max() as Double}
+                for(e in 0..size.toInt()-1){
+                    arr[e][o.names.indexOf(i.name)]=line[e]
+                }
+            }
+            return arr
+        }
+        fun buildColumn(o:Array<DoubleArray>):DoubleArray{
+            var e:MutableList<Double> = mutableListOf()
+            for(i in o){
+                e.add(i[0])
+            }
+            return e.toDoubleArray()
+        }
     }
 }

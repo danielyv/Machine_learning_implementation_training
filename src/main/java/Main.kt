@@ -1,4 +1,5 @@
 import Regression.MLR
+import Regression.MPR
 import Regression.PR
 import krangl.*
 import org.knowm.xchart.BitmapEncoder
@@ -9,8 +10,8 @@ import org.knowm.xchart.XYSeries.XYSeriesRenderStyle
 import org.knowm.xchart.XYChartBuilder
 
 fun main(args: Array<String>) {
-    var df = DataPreProcessing.standardisation(DataFrame.readCSV("./Salary_Data.csv"))
-
+    var df = DataFrame.readCSV("./50_Startups.csv")
+    df=DataPreProcessing.standardisation(DataPreProcessing.categorisation(df,"State"))
     //df = DataPreProcessing.dummyVariables(DataPreProcessing.categorisation(df, "State"), "State")
 
     for(i in df.names){
@@ -20,7 +21,6 @@ fun main(args: Array<String>) {
     }
     var (train, test) = DataPreProcessing.split_dataset(df, 0.8)
 
-    print(df)
     /*
     //SIMPLE LINEAR REGRESSION TEST
     var x: SLR = SLR(df,"YearsExperience","Salary")
@@ -44,6 +44,7 @@ fun main(args: Array<String>) {
     var x = MLR(trainX, trainY, 0.05)
     x.train()
     */
+    /*
     //POLYNOMIAL REGRESSION
     var x=PR(df,"YearsExperience","Salary",6)
     x.train()
@@ -51,7 +52,14 @@ fun main(args: Array<String>) {
     val result: DoubleArray = x.predictArray(doubleArray.toTypedArray())
     var b: Array<DoubleArray> = arrayOf(DataPreProcessing.columntoDoubleArray(df[0]),DataPreProcessing.columntoDoubleArray(df[1]))
     var v: Array<DoubleArray> = arrayOf(doubleArray, result)
-
+    */
+    //MULTIPLE POLYNOMIAL REGRESSION
+    var x= MPR(df.select("R&D Spend","Marketing Spend"),df.select("Profit"),2)
+    x.train()
+    var doubleArray:Array<DoubleArray> =DataPreProcessing.buildTestSampleMultipleRegression(df.select("R&D Spend","Marketing Spend"),1000.0)
+    val result: DoubleArray = x.predictArray(doubleArray)
+    var b: Array<DoubleArray> = arrayOf(DataPreProcessing.columntoDoubleArray(df["R&D Spend"]),DataPreProcessing.columntoDoubleArray(df["Profit"]))
+    var v: Array<DoubleArray> = arrayOf(DataPreProcessing.buildColumn(doubleArray), result)
     chart(b, v)
 }
 

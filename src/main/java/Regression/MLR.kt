@@ -4,7 +4,7 @@ import org.ejml.simple.SimpleMatrix
 
 
 class MLR(X:DataFrame,Y:DataFrame,SL:Double){
-     var x:DataFrame = X
+    private var x:DataFrame = X
     private val y:DataFrame = Y
     private val significanceValue:Double=SL
     private var iv:DoubleArray= DoubleArray(x.names.size+1)
