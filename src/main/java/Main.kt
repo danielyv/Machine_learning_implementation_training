@@ -4,7 +4,7 @@ import krangl.*
 
 fun main(args: Array<String>) {
 
-    var df = DataFrame.readCSV("./pulsar_stars.csv")
+    var df = DataFrame.readCSV("./Salary_Data.csv")
     df=DataPreProcessing.standardisation(df)
     //df = DataPreProcessing.dummyVariables(DataPreProcessing.categorisation(df, "State"), "State")
 
@@ -13,18 +13,19 @@ fun main(args: Array<String>) {
             df[i].asDoubles()
         }
     }
-    val X:Iterable<String> = df.remove(" Skewness of the DM-SNR curve").names
-    val Y:String =" Skewness of the DM-SNR curve"
+    val X:Iterable<String> = df.remove("Salary").names
+    val Y:String ="Salary"
     val X_df:DataFrame=df.select(X)
     val Y_df:DataFrame=df.select(Y)
 
 
     //MULTIPLE POLYNOMIAL REGRESSION
-    for(i in 1..9){
+    for(i in 0..40){
         var predictor= MPR(X_df,Y_df,i)
         predictor.train()
         println(i)
         predictionStats(predictor,X_df.select(X_df.names),Y_df.select(Y_df.names))
+        plot2D(predictor,df,X_df,Y_df,i)
     }
 
 
@@ -60,11 +61,11 @@ fun predictionStats(predictor:MPR,X:DataFrame,Y:DataFrame){
 fun plot3D(x:MPR,df:DataFrame){
     Chart.chart3D(x,df)
 }
-fun plot2D(x:MPR,df:DataFrame,X_df:DataFrame,Y_df:DataFrame){
-    var doubleArray:Array<DoubleArray> =DataPreProcessing.buildTestSampleMultipleRegression(df,1000.0)
-    val result: DoubleArray = x.predictArray(DataPreProcessing.toArrayDoubleArray(X_df))
+fun plot2D(x:MPR,df:DataFrame,X_df:DataFrame,Y_df:DataFrame,degree:Int){
+    var doubleArray:Array<DoubleArray> =DataPreProcessing.buildTestSampleMultipleRegression(X_df,1000.0)
+    val result: DoubleArray = x.predictArray(doubleArray)
 
-    var b: Array<DoubleArray> = arrayOf(DataPreProcessing.buildDoubleArrayIncr(result.size),DataPreProcessing.columntoDoubleArray(Y_df[0]))
-    var v: Array<DoubleArray> = arrayOf(DataPreProcessing.buildDoubleArrayIncr(result.size), result)
-    Chart.chart2D(b,v)
+    var b: Array<DoubleArray> = arrayOf(DataPreProcessing.columntoDoubleArray(X_df[0]),DataPreProcessing.columntoDoubleArray(Y_df[0]))
+    var v: Array<DoubleArray> = arrayOf(DataPreProcessing.buildColumn(doubleArray), result)
+    Chart.chart2D(b,v,degree)
 }

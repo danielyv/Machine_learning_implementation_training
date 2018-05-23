@@ -20,17 +20,18 @@ import org.knowm.xchart.style.markers.SeriesMarkers
 public class Chart() {
     companion object {
 
-        fun chart2D(a: Array<DoubleArray>, b: Array<DoubleArray>) {
-            val chart = XYChartBuilder().width(600).height(500).title("YearsExperience VS Salary").xAxisTitle("YearsExperience").yAxisTitle("Salary").build()
+        fun chart2D(a: Array<DoubleArray>, b: Array<DoubleArray>,degree:Int) {
+            val chart = XYChartBuilder().width(600).height(500).title("YearsExperience VS Salary of degree"+degree).xAxisTitle("YearsExperience").yAxisTitle("Salary").build()
 
 // Customize Chart
             chart.styler.defaultSeriesRenderStyle = XYSeries.XYSeriesRenderStyle.Scatter
-            chart.styler.isChartTitleVisible = false
+            chart.styler.isChartTitleVisible = true
             chart.styler.legendPosition = Styler.LegendPosition.InsideSW
             chart.styler.markerSize = 5
 
 // Series
             chart.addSeries("Observed", a[0], a[1])
+
             val series = chart.addSeries("Predicted", b[0], b[1])
             series.setMarker(SeriesMarkers.DIAMOND)
 
