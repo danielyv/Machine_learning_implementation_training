@@ -8,6 +8,19 @@ import org.ejml.simple.SimpleMatrix
 
 class DataPreProcessing {
     companion object {
+        fun  toArrayDoubleArray(df:DataFrame):Array<DoubleArray>{
+            var arr: MutableList<DoubleArray> = mutableListOf()
+            for(i in df.rows){
+                var row: MutableList<Double> = mutableListOf()
+                for(e in i.values){
+
+                    row.add(e.toString().toDouble())
+
+                }
+                arr.add(row.toDoubleArray())
+            }
+            return arr.toTypedArray()
+        }
         fun split_dataset(data: DataFrame,prctTrain: Double): Pair<DataFrame, DataFrame> {
             var df:DataFrame=data.select(data.names)
             var fdf=df.head((df.cols[0].length*prctTrain).toInt())
@@ -198,6 +211,9 @@ class DataPreProcessing {
                 e.add(i[0])
             }
             return e.toDoubleArray()
+        }
+        fun buildDoubleArrayIncr(size:Int):DoubleArray{
+            return DoubleArray(size,{e->e.toDouble()})
         }
     }
 }

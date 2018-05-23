@@ -20,11 +20,10 @@ class MPR(X: DataFrame, Y: DataFrame, degree:Int) {
             }
             m_arr.add(arr.toDoubleArray())
         }
+
         var matrix= SimpleMatrix(m_arr.toTypedArray())
-        print(matrix)
         var Y: SimpleMatrix =DataPreProcessing.dataFrameToMatrix(y)
-        print(matrix.transpose().mult(matrix))
-        matrix=((matrix.transpose().mult(matrix)).invert()).mult(matrix.transpose()).mult(Y)
+        matrix=((matrix.transpose().mult(matrix)).pseudoInverse()).mult(matrix.transpose()).mult(Y)
 
         for(i in 0..matrix.numRows()-1) {
             iv[i] = matrix[i, 0]
@@ -46,6 +45,7 @@ class MPR(X: DataFrame, Y: DataFrame, degree:Int) {
         }
         return arr.toDoubleArray()
     }
+
 
 
 }

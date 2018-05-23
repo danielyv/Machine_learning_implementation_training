@@ -38,7 +38,7 @@ public class PR(pts: DataFrame, x:String, y:String,degree:Int){
         }
         var matrix= SimpleMatrix(m_arr.toTypedArray())
         var Y:SimpleMatrix=DataPreProcessing.dataFrameToMatrix(points.select(Y))
-        matrix=((matrix.transpose().mult(matrix)).invert()).mult(matrix.transpose()).mult(Y)
+        matrix=((matrix.transpose().mult(matrix)).pseudoInverse()).mult(matrix.transpose()).mult(Y)
 
         for(i in 0..matrix.numRows()-1) {
             a[i] = matrix[i, 0]

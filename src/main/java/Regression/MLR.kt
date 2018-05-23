@@ -16,7 +16,7 @@ class MLR(X:DataFrame,Y:DataFrame,SL:Double){
             1.0
         })
         var Y:SimpleMatrix=DataPreProcessing.dataFrameToMatrix(y)
-        var B:SimpleMatrix=((X.transpose().mult(X)).invert()).mult(X.transpose()).mult(Y)
+        var B:SimpleMatrix=((X.transpose().mult(X)).pseudoInverse()).mult(X.transpose()).mult(Y)
         for(i in 0..B.numRows()-1){
             iv[i]=B[i,0]
         }

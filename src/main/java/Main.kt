@@ -1,17 +1,11 @@
-import Regression.MLR
 import Regression.MPR
-import Regression.PR
 import krangl.*
-import org.knowm.xchart.BitmapEncoder
-import org.knowm.xchart.SwingWrapper
-import org.knowm.xchart.style.markers.SeriesMarkers
-import org.knowm.xchart.style.Styler.LegendPosition
-import org.knowm.xchart.XYSeries.XYSeriesRenderStyle
-import org.knowm.xchart.XYChartBuilder
+
 
 fun main(args: Array<String>) {
-    var df = DataFrame.readCSV("./50_Startups.csv")
-    df=DataPreProcessing.standardisation(DataPreProcessing.categorisation(df,"State"))
+
+    var df = DataFrame.readCSV("./pulsar_stars.csv")
+    df=DataPreProcessing.standardisation(df)
     //df = DataPreProcessing.dummyVariables(DataPreProcessing.categorisation(df, "State"), "State")
 
     for(i in df.names){
@@ -19,65 +13,58 @@ fun main(args: Array<String>) {
             df[i].asDoubles()
         }
     }
-    var (train, test) = DataPreProcessing.split_dataset(df, 0.8)
-
-    /*
-    //SIMPLE LINEAR REGRESSION TEST
-    var x: SLR = SLR(df,"YearsExperience","Salary")
-    x.train()
-    var v:Array<DoubleArray> = arrayOf(DataPreProcessing.columntoDoubleArray(test["YearsExperience"]),DataPreProcessing.columntoDoubleArray(test["Salary"]))
-    var b:Array<DoubleArray> = arrayOf(DataPreProcessing.columntoDoubleArray(test["YearsExperience"]),x.predictArray(test["YearsExperience"].values()))
-    chart(v,b)
-    */
-
-    /*
-    //MULTIPLE LINEAR REGRESSION TEST
-    var trainY = train.select("Profit")
-
-    var trainX = train.remove("Profit")
+    val X:Iterable<String> = df.remove(" Skewness of the DM-SNR curve").names
+    val Y:String =" Skewness of the DM-SNR curve"
+    val X_df:DataFrame=df.select(X)
+    val Y_df:DataFrame=df.select(Y)
 
 
-    var testY = test.select("Profit")
-
-    var testX = test.remove("Profit")
-    testX=testX.select(trainX.names)
-    var x = MLR(trainX, trainY, 0.05)
-    x.train()
-    */
-    /*
-    //POLYNOMIAL REGRESSION
-    var x=PR(df,"YearsExperience","Salary",6)
-    x.train()
-    var doubleArray:DoubleArray= DoubleArray((df["YearsExperience"].max()as Double*1000.0).toInt()*2,{ i->((i-(df["YearsExperience"].max()as Double*1000.0))/1000).toDouble()})
-    val result: DoubleArray = x.predictArray(doubleArray.toTypedArray())
-    var b: Array<DoubleArray> = arrayOf(DataPreProcessing.columntoDoubleArray(df[0]),DataPreProcessing.columntoDoubleArray(df[1]))
-    var v: Array<DoubleArray> = arrayOf(doubleArray, result)
-    */
     //MULTIPLE POLYNOMIAL REGRESSION
-    var x= MPR(df.select("R&D Spend","Marketing Spend"),df.select("Profit"),2)
-    x.train()
-    var doubleArray:Array<DoubleArray> =DataPreProcessing.buildTestSampleMultipleRegression(df.select("R&D Spend","Marketing Spend"),1000.0)
-    val result: DoubleArray = x.predictArray(doubleArray)
-    var b: Array<DoubleArray> = arrayOf(DataPreProcessing.columntoDoubleArray(df["R&D Spend"]),DataPreProcessing.columntoDoubleArray(df["Profit"]))
-    var v: Array<DoubleArray> = arrayOf(DataPreProcessing.buildColumn(doubleArray), result)
-    chart(b, v)
+    for(i in 1..9){
+        var predictor= MPR(X_df,Y_df,i)
+        predictor.train()
+        println(i)
+        predictionStats(predictor,X_df.select(X_df.names),Y_df.select(Y_df.names))
+    }
+
+
+
 }
 
+fun predictionStats(predictor:MPR,X:DataFrame,Y:DataFrame){
+    val result: DoubleArray = predictor.predictArray(DataPreProcessing.toArrayDoubleArray(X))
+    val difference:DoubleArray = DoubleArray(result.size)
 
-fun chart(a: Array<DoubleArray>, b: Array<DoubleArray>) {
-    val chart = XYChartBuilder().width(600).height(500).title("YearsExperience VS Salary").xAxisTitle("YearsExperience").yAxisTitle("Salary").build()
+    var resultmean=result.sum()/result.size
+    var resultsd=0.0
+    for(i in 0..result.size-1){
+        resultsd+= result[i]-resultmean
+        difference[i]=result[i]-Y[0].values()[i].toString().toDouble()
+    }
+    val mean=difference.sum()/difference.size
+    var sd=0.0
+    for(i in difference){
+        sd+=(i-mean)
+    }
 
-// Customize Chart
-    chart.styler.defaultSeriesRenderStyle = XYSeriesRenderStyle.Scatter
-    chart.styler.isChartTitleVisible = false
-    chart.styler.legendPosition = LegendPosition.InsideSW
-    chart.styler.markerSize = 5
+    sd/=difference.size
+    println("Mean = "+mean)
+    println("SD = "+sd)
+    println("Y mean = "+Y[0].mean())
+    println("Y SD = "+(Y[0].minus(Y[0].mean()as Number)).mean())
+    println("Result mean = "+resultmean)
+    println("Result SD = "+resultsd/result.size)
 
-// Series
-    chart.addSeries("Observed", a[0], a[1])
-    val series = chart.addSeries("Predicted", b[0], b[1])
-    series.setMarker(SeriesMarkers.DIAMOND)
+}
 
-    SwingWrapper(chart).displayChart()
-    BitmapEncoder.saveBitmap(chart, "./Sample_Chart", BitmapEncoder.BitmapFormat.PNG);
+fun plot3D(x:MPR,df:DataFrame){
+    Chart.chart3D(x,df)
+}
+fun plot2D(x:MPR,df:DataFrame,X_df:DataFrame,Y_df:DataFrame){
+    var doubleArray:Array<DoubleArray> =DataPreProcessing.buildTestSampleMultipleRegression(df,1000.0)
+    val result: DoubleArray = x.predictArray(DataPreProcessing.toArrayDoubleArray(X_df))
+
+    var b: Array<DoubleArray> = arrayOf(DataPreProcessing.buildDoubleArrayIncr(result.size),DataPreProcessing.columntoDoubleArray(Y_df[0]))
+    var v: Array<DoubleArray> = arrayOf(DataPreProcessing.buildDoubleArrayIncr(result.size), result)
+    Chart.chart2D(b,v)
 }
