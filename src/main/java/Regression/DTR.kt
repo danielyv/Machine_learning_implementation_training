@@ -1,5 +1,5 @@
 package Regression
-
+//WIP
 import krangl.DataFrame
 import krangl.gt
 import krangl.mean
@@ -22,6 +22,12 @@ class DTR(data: DataFrame, name: String,res:Boolean) {
         }
     }
     public fun splitValue(){
+        var varianceList:MutableList<Pair<String,Double>> = mutableListOf()
+        for(i in data.remove(name).cols){
+            var mean=i.mean() as Double
+            varianceList.add(Pair(i.name,(i.minus(mean).mean() as Double)))
+        }
+        varianceList.sortDescending()
 
     }
     public fun splitData():Pair<DataFrame,DataFrame>{
