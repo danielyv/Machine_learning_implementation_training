@@ -20,8 +20,8 @@ import org.knowm.xchart.style.markers.SeriesMarkers
 public class Chart() {
     companion object {
 
-        fun chart2D(a: Array<DoubleArray>, b: Array<DoubleArray>,degree:Int) {
-            val chart = XYChartBuilder().width(600).height(500).title("YearsExperience VS Salary of degree"+degree).xAxisTitle("YearsExperience").yAxisTitle("Salary").build()
+        fun chart2D(a: Array<DoubleArray>, b: Array<DoubleArray>,degree:Int,title:String,x:String,y:String) {
+            val chart = XYChartBuilder().width(600).height(500).title(title+" of degree"+degree).xAxisTitle(x).yAxisTitle(y).build()
 
 // Customize Chart
             chart.styler.defaultSeriesRenderStyle = XYSeries.XYSeriesRenderStyle.Scatter
