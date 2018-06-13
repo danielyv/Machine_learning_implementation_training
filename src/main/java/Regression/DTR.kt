@@ -34,12 +34,13 @@ class DTR(data: DataFrame, name: String,accValue:Double) {
     }
     public fun generateSubTrees(){
         var entr:DoubleArray= proba_entropy_array()
-        isRes=entr.max() as Double>accuracyValue
+        val max=entr.max() as Double
+        isRes=max>accuracyValue
         if(isRes){
-            splitValue(entr.indexOf(entr.max() as Double))
+            splitValue(entr.indexOf(max as Double))
             val splitdata=splitData()
-            left=DTR(splitdata.second,name,accuracyValue)
-            right=DTR(splitdata.first,name,accuracyValue)
+            left=DTR(splitdata.second,name,max)
+            right=DTR(splitdata.first,name,max)
             (left as DTR).generateSubTrees()
             (right as DTR).generateSubTrees()
         }
