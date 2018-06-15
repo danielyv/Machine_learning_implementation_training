@@ -3,6 +3,7 @@ package Regression
 import krangl.DataFrame
 import org.ejml.simple.SimpleMatrix
 
+//POLYNOMIAL REGRESSION
 public class PR(pts: DataFrame, x:String, y:String,degree:Int){
     var deg:Int=degree
     var a: DoubleArray = DoubleArray(degree+1)

@@ -2,13 +2,12 @@ package Regression
 import krangl.*
 import org.ejml.simple.SimpleMatrix
 
-
+//MULTIPLE LINEAR REGRESSION
 class MLR(X:DataFrame,Y:DataFrame,SL:Double){
     private var x:DataFrame = X
     private val y:DataFrame = Y
     private val significanceValue:Double=SL
     private var iv:DoubleArray= DoubleArray(x.names.size+1)
-    //private var slr:Array<SLR> = slrConstruct()
 
     fun train(){
 
@@ -43,7 +42,5 @@ class MLR(X:DataFrame,Y:DataFrame,SL:Double){
         iv.forEach { e->str+=e.toString()+";" }
         return str.substring(0,str.length-1)
     }
-
-
 
 }

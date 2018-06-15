@@ -1,9 +1,9 @@
 package Regression
-//WIP
 import krangl.*
 import org.apache.commons.math3.stat.Frequency
 import kotlin.math.log
 
+//DECISION TREE  REGRESSION
 class DTR(data: DataFrame, name: String,accValue:Double) {
     private val name= name
     private val data:DataFrame = data
@@ -24,7 +24,7 @@ class DTR(data: DataFrame, name: String,accValue:Double) {
     }
 
     public fun splitValue(i:Int){
-
+        split = Pair(i,data[i].mean() as Double)
     }
 
     public fun splitData():Pair<DataFrame,DataFrame>{
@@ -37,7 +37,7 @@ class DTR(data: DataFrame, name: String,accValue:Double) {
         val max=entr.max() as Double
         isRes=max>accuracyValue
         if(isRes){
-            splitValue(entr.indexOf(max as Double))
+            splitValue(entr.indexOf(max))
             val splitdata=splitData()
             left=DTR(splitdata.second,name,max)
             right=DTR(splitdata.first,name,max)

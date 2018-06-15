@@ -4,6 +4,7 @@ import krangl.DataFrame
 import krangl.schema
 import org.ejml.simple.SimpleMatrix
 
+//MULTIPLE POLYNOMIAL REGRESSION
 class MPR(X: DataFrame, Y: DataFrame, degree:Int) {
     private var x:DataFrame = X
     private val y:DataFrame = Y
