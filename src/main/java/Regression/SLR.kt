@@ -2,11 +2,12 @@ package Regression
 
 import krangl.DataFrame
 import krangl.mean
+import Estimator
 
 typealias PDA = Pair<DoubleArray, DoubleArray>
 
 //LINEAR REGRESSION
-class SLR(pts: DataFrame,x:String,y:String) {
+class SLR(pts: DataFrame,x:String,y:String) : Estimator() {
     var a: Double = 0.0
     var b: Double = 0.0
     val X:String=x
@@ -33,13 +34,13 @@ class SLR(pts: DataFrame,x:String,y:String) {
         b=mean[1]-a*mean[0]
 
     }
-    fun predict(x: Double): Double {
-        return a * x + b
+    override fun predict(x: DoubleArray): Double {
+        return a * x[0] + b
     }
     fun predictArray(x:Array<*>):DoubleArray{
         var copy:MutableList<Double> = mutableListOf()
         for(i in x){
-            copy.add(this.predict(i.toString().toDouble()))
+            copy.add(this.predict(kotlin.doubleArrayOf(i.toString().toDouble())))
         }
         return copy.toDoubleArray()
     }

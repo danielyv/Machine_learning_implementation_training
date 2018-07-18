@@ -5,8 +5,10 @@ import krangl.head
 import krangl.shuffle
 import krangl.tail
 import java.util.*
+import Estimator
+
 //RANDOM FOREST REGRESSION
-class RFR(data: DataFrame, name: String, accValue:Double) {
+class RFR(data: DataFrame, name: String, accValue:Double): Estimator()  {
     private val name= name
     private val data:DataFrame = data
     private  val accuracyValue=accValue
@@ -28,7 +30,7 @@ class RFR(data: DataFrame, name: String, accValue:Double) {
             list[list.size-1].generateSubTrees()
         }
     }
-    public fun predict(arr:DoubleArray):Double{
+    public override fun predict(arr:DoubleArray):Double{
         var sum:Double=0.0
         for(i in list){
             sum+=i.predict(arr)

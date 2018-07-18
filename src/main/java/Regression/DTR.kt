@@ -2,9 +2,9 @@ package Regression
 import krangl.*
 import org.apache.commons.math3.stat.Frequency
 import kotlin.math.log
-
+import Estimator
 //DECISION TREE  REGRESSION
-class DTR(data: DataFrame, name: String,accValue:Double) {
+class DTR(data: DataFrame, name: String,accValue:Double): Estimator()  {
     private val name= name
     private val data:DataFrame = data
     private var isRes:Boolean=false
@@ -13,7 +13,7 @@ class DTR(data: DataFrame, name: String,accValue:Double) {
     private var left:DTR?=null
     private var right:DTR?=null
 
-    public fun predict(X:DoubleArray):Double{
+    public override fun predict(X:DoubleArray):Double{
         if(isRes){
             return data[name].mean() as Double
         }else if(X[split.first]>split.second){

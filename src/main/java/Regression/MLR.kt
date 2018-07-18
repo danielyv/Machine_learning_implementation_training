@@ -1,9 +1,10 @@
 package Regression
 import krangl.*
 import org.ejml.simple.SimpleMatrix
+import Estimator
 
 //MULTIPLE LINEAR REGRESSION
-class MLR(X:DataFrame,Y:DataFrame,SL:Double){
+class MLR(X:DataFrame,Y:DataFrame,SL:Double): Estimator() {
     private var x:DataFrame = X
     private val y:DataFrame = Y
     private val significanceValue:Double=SL
@@ -21,7 +22,7 @@ class MLR(X:DataFrame,Y:DataFrame,SL:Double){
         }
 
     }
-    fun predict(data:DoubleArray):Double{
+    override fun predict(data:DoubleArray):Double{
         var result:Double=iv[iv.size-1]
         for(i in 0..iv.size-2){
             result+=data[i]*iv[i]

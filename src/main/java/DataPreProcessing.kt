@@ -13,7 +13,6 @@ class DataPreProcessing {
             for(i in df.rows){
                 var row: MutableList<Double> = mutableListOf()
                 for(e in i.values){
-
                     row.add(e.toString().toDouble())
 
                 }

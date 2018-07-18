@@ -2,9 +2,10 @@ package Regression
 
 import krangl.DataFrame
 import org.ejml.simple.SimpleMatrix
+import Estimator
 
 //POLYNOMIAL REGRESSION
-public class PR(pts: DataFrame, x:String, y:String,degree:Int){
+public class PR(pts: DataFrame, x:String, y:String,degree:Int): Estimator() {
     var deg:Int=degree
     var a: DoubleArray = DoubleArray(degree+1)
     val X:String=x
@@ -12,17 +13,18 @@ public class PR(pts: DataFrame, x:String, y:String,degree:Int){
 
 
     private val points: DataFrame = pts
-    fun predict(data:Double):Double{
+    override fun predict(data:DoubleArray):Double{
+        val dat=data[0]
         var result:Double=0.0
         for(i in 0..a.size-1){
-            result+=a[i]*Math.pow(data,i.toDouble())
+            result+=a[i]*Math.pow(dat,i.toDouble())
         }
         return result
     }
     fun predictArray(data:Array<Double> ):DoubleArray{
         var arr:MutableList<Double> = mutableListOf()
         for(i in data){
-            arr.add(predict(i))
+            arr.add(predict(doubleArrayOf(i)))
         }
         return arr.toDoubleArray()
     }
